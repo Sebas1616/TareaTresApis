@@ -15,8 +15,8 @@ interface FavoritoDao {
     fun observarIdsFavoritos(): Flow<List<Int>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertar(favorito: FavoritoEntity)
+    fun insertar(favorito: FavoritoEntity)
 
     @Query("DELETE FROM favoritos WHERE id = :id")
-    suspend fun eliminarPorId(id: Int)
+    fun eliminarPorId(id: Int)
 }

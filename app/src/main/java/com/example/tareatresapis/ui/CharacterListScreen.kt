@@ -9,7 +9,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,11 +36,14 @@ fun CharacterListScreen(viewModel: MainViewModel) {
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(uiState.characters) { character ->
+                items(
+                    items = uiState.characters,
+                    key = { it.id }
+                ) { character ->
                     CharacterCard(
                         character = character,
                         esFavorito = character.id in uiState.favoritosIds,
-                        onFavoritoClick = { viewModel.alternarFavorito(character) }
+                        onFavoritoClick = { viewModel.alternarFavorito(character.id) }
                     )
                 }
             }
@@ -55,13 +60,17 @@ fun CharacterCard(character: MergedCharacter, esFavorito: Boolean, onFavoritoCli
     ) {
         Box {
             Column(
-                modifier = Modifier.padding(12.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AsyncImage(
                     model = character.image,
                     contentDescription = character.name,
-                    modifier = Modifier.size(90.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(90.dp)
+                        .clip(CircleShape)
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
@@ -84,13 +93,14 @@ fun CharacterCard(character: MergedCharacter, esFavorito: Boolean, onFavoritoCli
                         AsyncImage(
                             model = url,
                             contentDescription = "Dog",
-                            modifier = Modifier.size(28.dp).clip(CircleShape)
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
                         )
                     }
                 }
             }
-            
-            // Icono de favorito
+
             IconButton(
                 onClick = onFavoritoClick,
                 modifier = Modifier.align(Alignment.TopEnd)

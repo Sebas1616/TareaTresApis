@@ -8,12 +8,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CharacterCacheDao {
-    @Query("SELECT * FROM character_cache ORDER BY id ASC")
+    @Query("SELECT * FROM character_cache")
     fun observarTodos(): Flow<List<CharacterCacheEntity>>
 
-    @Query("SELECT COUNT(*) FROM character_cache")
-    suspend fun contar(): Int
+    @Query("SELECT * FROM character_cache WHERE id = :id LIMIT 1")
+    fun obtenerPorId(id: Int): CharacterCacheEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertarTodos(characters: List<CharacterCacheEntity>)
+    fun insertar(personaje: CharacterCacheEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertarTodos(personajes: List<CharacterCacheEntity>)
 }
